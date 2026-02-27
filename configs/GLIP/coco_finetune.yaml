@@ -1,0 +1,81 @@
+# 继承官方预训练配置
+_BASE_: "../pretrain/glip_Swin_T_O365_GoldG.yaml"
+
+MODEL:
+  # 修改为GLIP专用的预训练权重
+  WEIGHT: "models/glip_tiny_model_o365_goldg_cc_sbu.pth"  # 下载这个权重
+
+  LANGUAGE_BACKBONE:
+    FREEZE: False  # 微调时不冻结语言模型
+
+  DYHEAD:
+    # 修改类别数（你的数据集类别数）
+    # 可以通过运行脚本统计你的JSON文件中的类别数
+    NUM_CLASSES: 251  # 你的类别总数
+
+DATASETS:
+  # 替换为你的数据集
+  TRAIN: ("coco_2017_train",)
+  TEST: ("coco_2017_val",)
+
+  # 关闭数据增强中的随机采样（针对你的小数据集）
+  RANDOM_SAMPLE_NEG: -1
+  CONTROL_PROB: (0.0, 0.0, 0.0, 0.0)  # 关闭控制概率
+
+INPUT:
+  # 保持原有的图像大小设置
+  PIXEL_MEAN: [103.530, 116.280, 123.675]
+  PIXEL_STD: [57.375, 57.120, 58.395]
+  MIN_SIZE_TRAIN: 800
+  MAX_SIZE_TRAIN: 1333
+  MIN_SIZE_TEST: 800
+  MAX_SIZE_TEST: 1333
+
+SOLVER:
+  # 根据你的数据量调整训练参数
+  # 你的训练集只有110张图片，所以要大幅调整
+  IMS_PER_BATCH: 8  # 每批次图片数（根据显存调整）
+  BASE_LR: 0.0001   # 基础学习率
+  LANG_LR: 0.00001  # 语言模型学习率
+
+  # 改为基于迭代次数的训练（因为你的数据小，用epoch不方便）
+  MAX_EPOCH: 50  # 训练50个epoch
+  STEPS: (0.6, 0.8)  # 学习率衰减在60%和80%的epoch时进行
+
+  # 优化器设置
+  OPTIMIZER: ADAMW
+  WEIGHT_DECAY: 0.0001
+
+  # 预热设置
+  WARMUP_ITERS: 200
+  WARMUP_FACTOR: 0.001
+
+  # 混合精度训练（如果GPU支持）
+  USE_AMP: True
+
+  # 梯度裁剪
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "full_model"
+    CLIP_VALUE: 1.0
+    NORM_TYPE: 2.0
+
+DATALOADER:
+  NUM_WORKERS: 4
+  SIZE_DIVISIBILITY: 32
+
+TEST:
+  DURING_TRAINING: True  # 训练期间进行验证
+  IMS_PER_BATCH: 8
+
+OUTPUT_DIR: "output/coco_finetune"
+
+# 自定义数据集路径配置
+DATASET_CATALOG:
+  CUSTOM:
+    coco_2017_train:
+      ann_file: "DATASET/coco/annotations/instances_train2017.json"
+      img_dir: "DATASET/coco/train2017"
+    coco_2017_val:
+      ann_file: "DATASET/coco/annotations/instances_val2017.json"
+      img_dir: "DATASET/coco/val2017"

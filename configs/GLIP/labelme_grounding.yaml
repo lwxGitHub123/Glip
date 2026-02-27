@@ -1,0 +1,27 @@
+# configs/GLIP/labelme_grounding.yaml
+_BASE_: "/workspace/GLIP/configs/pretrain/glip_Swin_T_O365.yaml"
+
+DATASETS:
+  TRAIN: ("labelme_grounding_train",)
+  TEST: ("coco_2017_val",)
+  DISABLE_SHUFFLE: True
+  ADD_DET_PROMPT: False
+
+MODEL:
+  DYHEAD:
+    NUM_CLASSES: 251  # 根据您的实际类别数修改
+
+SOLVER:
+  IMS_PER_BATCH: 4  # 根据GPU内存调整
+  BASE_LR: 0.00001
+  LANG_LR: 0.00001
+  MAX_EPOCH: 50
+  STEPS: (0.6, 0.8)
+  WARMUP_ITERS: 500
+
+TEST:
+  IMS_PER_BATCH: 2
+  DURING_TRAINING: True
+  EVAL_TASK: "grounding"
+
+OUTPUT_DIR: "./output/labelme_grounding"

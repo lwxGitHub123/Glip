@@ -1,0 +1,1395 @@
+{
+  "info": {
+    "description": "Dataset converted from LabelMe - test2017",
+    "url": "",
+    "version": "1.0",
+    "year": 2026,
+    "contributor": "LabelMe to COCO Converter",
+    "date_created": "2026/02/10"
+  },
+  "licenses": [
+    {
+      "url": "",
+      "id": 1,
+      "name": "Unknown"
+    }
+  ],
+  "images": [
+    {
+      "id": 1,
+      "width": 640,
+      "height": 407,
+      "file_name": "test2017_000000000001.jpg",
+      "license": 1,
+      "flickr_url": "",
+      "coco_url": "",
+      "date_captured": ""
+    }
+  ],
+  "annotations": [
+    {
+      "id": 1,
+      "image_id": 1,
+      "category_id": 123,
+      "bbox": [
+        3.333333333333347,
+        34.452380952380956,
+        396.42857142857144,
+        371.42857142857144
+      ],
+      "area": 147244.8979591837,
+      "segmentation": [
+        [
+          3.333333333333347,
+          246.35714285714283,
+          59.2857142857143,
+          274.92857142857144,
+          75.95238095238096,
+          277.3095238095238,
+          73.57142857142858,
+          334.45238095238096,
+          84.2857142857143,
+          360.64285714285717,
+          92.61904761904763,
+          401.11904761904765,
+          130.71428571428572,
+          405.8809523809524,
+          124.76190476190477,
+          372.54761904761904,
+          140.23809523809527,
+          349.92857142857144,
+          148.57142857142858,
+          324.92857142857144,
+          167.61904761904765,
+          342.7857142857143,
+          204.52380952380955,
+          335.64285714285717,
+          230.71428571428572,
+          352.3095238095238,
+          250.95238095238096,
+          370.1666666666667,
+          299.7619047619048,
+          373.73809523809524,
+          345.00000000000006,
+          363.0238095238095,
+          350.952380952381,
+          336.8333333333333,
+          335.47619047619054,
+          288.0238095238095,
+          334.28571428571433,
+          257.07142857142856,
+          356.904761904762,
+          222.54761904761904,
+          383.09523809523813,
+          190.4047619047619,
+          398.5714285714286,
+          158.26190476190476,
+          396.19047619047626,
+          123.73809523809524,
+          398.5714285714286,
+          90.4047619047619,
+          399.7619047619048,
+          68.97619047619048,
+          389.0476190476191,
+          34.452380952380956,
+          366.4285714285715,
+          52.3095238095238,
+          352.1428571428572,
+          57.07142857142858,
+          329.5238095238096,
+          64.21428571428572,
+          305.7142857142858,
+          45.166666666666664,
+          291.4285714285715,
+          49.92857142857142,
+          297.3809523809524,
+          73.73809523809524,
+          302.14285714285717,
+          85.64285714285714,
+          300.952380952381,
+          98.73809523809524,
+          298.5714285714286,
+          109.45238095238093,
+          261.66666666666674,
+          117.78571428571428,
+          216.42857142857144,
+          123.73809523809524,
+          178.33333333333334,
+          141.5952380952381,
+          148.57142857142858,
+          160.64285714285714,
+          130.71428571428572,
+          185.64285714285714,
+          102.14285714285715,
+          202.3095238095238,
+          86.66666666666669,
+          227.3095238095238,
+          60.47619047619049,
+          228.5,
+          16.42857142857144,
+          211.83333333333331,
+          3.333333333333347,
+          207.07142857142856
+        ]
+      ],
+      "iscrowd": 0
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "一个中年女人，拿着刀叉在切披萨。",
+      "supercategory": "none"
+    },
+    {
+      "id": 2,
+      "name": "一个女人，打着红色的伞，在笑。",
+      "supercategory": "none"
+    },
+    {
+      "id": 3,
+      "name": "一个小女孩，拿着西兰花",
+      "supercategory": "none"
+    },
+    {
+      "id": 4,
+      "name": "一个座钟。",
+      "supercategory": "none"
+    },
+    {
+      "id": 5,
+      "name": "一个男人，穿着白色上衣，黑色裤子，骑在自行车上。",
+      "supercategory": "none"
+    },
+    {
+      "id": 6,
+      "name": "一个男子在滑滑板车。",
+      "supercategory": "none"
+    },
+    {
+      "id": 7,
+      "name": "一个白色盘子，里面放了一个白色杯子的咖啡。",
+      "supercategory": "none"
+    },
+    {
+      "id": 8,
+      "name": "一个白色盘子，里面放了一块灰色蛋糕。",
+      "supercategory": "none"
+    },
+    {
+      "id": 9,
+      "name": "一个穿红色衣服的人，在雪地滑雪。",
+      "supercategory": "none"
+    },
+    {
+      "id": 10,
+      "name": "一个钢叉，吃饭用的，在白色盘子里的白纸上。",
+      "supercategory": "none"
+    },
+    {
+      "id": 11,
+      "name": "一份披萨。",
+      "supercategory": "none"
+    },
+    {
+      "id": 12,
+      "name": "一列火车。",
+      "supercategory": "none"
+    },
+    {
+      "id": 13,
+      "name": "一匹黑色的马，上面坐着一个人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 14,
+      "name": "一双深蓝色的拖鞋。",
+      "supercategory": "none"
+    },
+    {
+      "id": 15,
+      "name": "一只白色的狗，趴在路边。",
+      "supercategory": "none"
+    },
+    {
+      "id": 16,
+      "name": "一只白色的猫，在图片左边，右边有一只黄色的猫。",
+      "supercategory": "none"
+    },
+    {
+      "id": 17,
+      "name": "一只白色的猫，在图片左边，右边有一直黄色的猫。",
+      "supercategory": "none"
+    },
+    {
+      "id": 18,
+      "name": "一只红色的拖鞋。",
+      "supercategory": "none"
+    },
+    {
+      "id": 19,
+      "name": "一只黄色的猫，在图片的右边，左边有一只白猫。",
+      "supercategory": "none"
+    },
+    {
+      "id": 20,
+      "name": "一台白色洗衣机。",
+      "supercategory": "none"
+    },
+    {
+      "id": 21,
+      "name": "一堆碟子。",
+      "supercategory": "none"
+    },
+    {
+      "id": 22,
+      "name": "一头大象，在茂密的森林中，背着一个人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 23,
+      "name": "一头大象，在茂密的森林中，背着两个人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 24,
+      "name": "一头斑马，正在吃草。",
+      "supercategory": "none"
+    },
+    {
+      "id": 25,
+      "name": "一头白色的马，上面坐着一个人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 26,
+      "name": "一头长颈鹿。",
+      "supercategory": "none"
+    },
+    {
+      "id": 27,
+      "name": "一排饮料。",
+      "supercategory": "none"
+    },
+    {
+      "id": 28,
+      "name": "一架飞机",
+      "supercategory": "none"
+    },
+    {
+      "id": 29,
+      "name": "一架飞机，在空中飞。",
+      "supercategory": "none"
+    },
+    {
+      "id": 30,
+      "name": "一桌饭菜。",
+      "supercategory": "none"
+    },
+    {
+      "id": 31,
+      "name": "一瓶瓶盖打开，倒出了一部分的葡萄酒",
+      "supercategory": "none"
+    },
+    {
+      "id": 32,
+      "name": "一盒奶酪",
+      "supercategory": "none"
+    },
+    {
+      "id": 33,
+      "name": "一盘米线，上面有烤鸭肉、胡萝卜、豆芽和菠菜",
+      "supercategory": "none"
+    },
+    {
+      "id": 34,
+      "name": "一辆摩托车。",
+      "supercategory": "none"
+    },
+    {
+      "id": 35,
+      "name": "一辆电动自行车。",
+      "supercategory": "none"
+    },
+    {
+      "id": 36,
+      "name": "一辆白色皮卡车。",
+      "supercategory": "none"
+    },
+    {
+      "id": 37,
+      "name": "一辆银白色汽车。",
+      "supercategory": "none"
+    },
+    {
+      "id": 38,
+      "name": "两手张开，背面，脸朝右、戴帽子的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 39,
+      "name": "中年女人，在男人右边，戴眼镜。",
+      "supercategory": "none"
+    },
+    {
+      "id": 40,
+      "name": "中年男人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 41,
+      "name": "中间的长颈鹿。",
+      "supercategory": "none"
+    },
+    {
+      "id": 42,
+      "name": "中间穿灰色衣服的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 43,
+      "name": "仰躺着的小花猫",
+      "supercategory": "none"
+    },
+    {
+      "id": 44,
+      "name": "公交车",
+      "supercategory": "none"
+    },
+    {
+      "id": 45,
+      "name": "公交车路线显示牌",
+      "supercategory": "none"
+    },
+    {
+      "id": 46,
+      "name": "冰柜",
+      "supercategory": "none"
+    },
+    {
+      "id": 47,
+      "name": "几颗绿树。",
+      "supercategory": "none"
+    },
+    {
+      "id": 48,
+      "name": "匹萨",
+      "supercategory": "none"
+    },
+    {
+      "id": 49,
+      "name": "只戴着黑色围巾的小男孩",
+      "supercategory": "none"
+    },
+    {
+      "id": 50,
+      "name": "台式主机",
+      "supercategory": "none"
+    },
+    {
+      "id": 51,
+      "name": "台式电脑",
+      "supercategory": "none"
+    },
+    {
+      "id": 52,
+      "name": "右边数第一个、第二高的楼。",
+      "supercategory": "none"
+    },
+    {
+      "id": 53,
+      "name": "右边数第一个大象",
+      "supercategory": "none"
+    },
+    {
+      "id": 54,
+      "name": "右边数第二、褐色的稍矮一点的楼。",
+      "supercategory": "none"
+    },
+    {
+      "id": 55,
+      "name": "右边数第二个大象",
+      "supercategory": "none"
+    },
+    {
+      "id": 56,
+      "name": "右边数第二的灰色狸花猫",
+      "supercategory": "none"
+    },
+    {
+      "id": 57,
+      "name": "右边饭盒里的面包",
+      "supercategory": "none"
+    },
+    {
+      "id": 58,
+      "name": "咖啡",
+      "supercategory": "none"
+    },
+    {
+      "id": 59,
+      "name": "土豆炒排骨",
+      "supercategory": "none"
+    },
+    {
+      "id": 60,
+      "name": "在中间，正往座椅走的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 61,
+      "name": "在最后面，穿黑色衣服，棒球守球员",
+      "supercategory": "none"
+    },
+    {
+      "id": 62,
+      "name": "坐在摩托车上的男人和女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 63,
+      "name": "坐在最右边、穿军装、戴着帽子的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 64,
+      "name": "坐在沙发上、半躺、抱着红色枕头的女人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 65,
+      "name": "坐在沙发上、穿白色衬衣、白鞋的男人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 66,
+      "name": "坐着的老年男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 67,
+      "name": "大树",
+      "supercategory": "none"
+    },
+    {
+      "id": 68,
+      "name": "大象，在小象后面，前脚爬到小象身上。",
+      "supercategory": "none"
+    },
+    {
+      "id": 69,
+      "name": "大黑熊",
+      "supercategory": "none"
+    },
+    {
+      "id": 70,
+      "name": "天空的云",
+      "supercategory": "none"
+    },
+    {
+      "id": 71,
+      "name": "奶酪，有面包蘸了一些酱，上面又放了几块香蕉。",
+      "supercategory": "none"
+    },
+    {
+      "id": 72,
+      "name": "小岛上的绿树。",
+      "supercategory": "none"
+    },
+    {
+      "id": 73,
+      "name": "小汽车",
+      "supercategory": "none"
+    },
+    {
+      "id": 74,
+      "name": "小象，在大象前面",
+      "supercategory": "none"
+    },
+    {
+      "id": 75,
+      "name": "左侧的长颈鹿，歪着脖子。",
+      "supercategory": "none"
+    },
+    {
+      "id": 76,
+      "name": "左边第二个大象，紧挨小象的左边",
+      "supercategory": "none"
+    },
+    {
+      "id": 77,
+      "name": "左边饭盒里的面包，夹着肉。",
+      "supercategory": "none"
+    },
+    {
+      "id": 78,
+      "name": "巴士",
+      "supercategory": "none"
+    },
+    {
+      "id": 79,
+      "name": "带有挂钟的房子",
+      "supercategory": "none"
+    },
+    {
+      "id": 80,
+      "name": "席梦思床",
+      "supercategory": "none"
+    },
+    {
+      "id": 81,
+      "name": "平静的河面",
+      "supercategory": "none"
+    },
+    {
+      "id": 82,
+      "name": "床架和白色被子。",
+      "supercategory": "none"
+    },
+    {
+      "id": 83,
+      "name": "微波炉",
+      "supercategory": "none"
+    },
+    {
+      "id": 84,
+      "name": "微波炉。",
+      "supercategory": "none"
+    },
+    {
+      "id": 85,
+      "name": "戴墨镜、穿灰白条纹衬衣和蓝色裤子的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 86,
+      "name": "戴草帽、穿深蓝上衣和工作服，在调酒的老年男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 87,
+      "name": "打羽毛球的男子",
+      "supercategory": "none"
+    },
+    {
+      "id": 88,
+      "name": "披萨",
+      "supercategory": "none"
+    },
+    {
+      "id": 89,
+      "name": "抱着衣服的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 90,
+      "name": "拿着遥控器，穿黑色衣服的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 91,
+      "name": "挂在墙上的平底锅",
+      "supercategory": "none"
+    },
+    {
+      "id": 92,
+      "name": "挂灯",
+      "supercategory": "none"
+    },
+    {
+      "id": 93,
+      "name": "挂钟",
+      "supercategory": "none"
+    },
+    {
+      "id": 94,
+      "name": "挂钟。",
+      "supercategory": "none"
+    },
+    {
+      "id": 95,
+      "name": "摔倒的灰熊布偶",
+      "supercategory": "none"
+    },
+    {
+      "id": 96,
+      "name": "摩托车",
+      "supercategory": "none"
+    },
+    {
+      "id": 97,
+      "name": "操场上的绿地面",
+      "supercategory": "none"
+    },
+    {
+      "id": 98,
+      "name": "放风筝的女士",
+      "supercategory": "none"
+    },
+    {
+      "id": 99,
+      "name": "最前面，拿棒球棒打球的打球员",
+      "supercategory": "none"
+    },
+    {
+      "id": 100,
+      "name": "最右侧的长颈鹿，低着头在吃草。",
+      "supercategory": "none"
+    },
+    {
+      "id": 101,
+      "name": "最右边的花猫",
+      "supercategory": "none"
+    },
+    {
+      "id": 102,
+      "name": "最左边的大象，正在往草丛走",
+      "supercategory": "none"
+    },
+    {
+      "id": 103,
+      "name": "最左边的灰色狸花猫",
+      "supercategory": "none"
+    },
+    {
+      "id": 104,
+      "name": "最左边穿白色衣服的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 105,
+      "name": "最近，最大的斑马。",
+      "supercategory": "none"
+    },
+    {
+      "id": 106,
+      "name": "最远、最小的斑马。",
+      "supercategory": "none"
+    },
+    {
+      "id": 107,
+      "name": "木框玻璃推拉门",
+      "supercategory": "none"
+    },
+    {
+      "id": 108,
+      "name": "木门",
+      "supercategory": "none"
+    },
+    {
+      "id": 109,
+      "name": "柜子。",
+      "supercategory": "none"
+    },
+    {
+      "id": 110,
+      "name": "橙色滑雪板",
+      "supercategory": "none"
+    },
+    {
+      "id": 111,
+      "name": "正在吃面包的男子",
+      "supercategory": "none"
+    },
+    {
+      "id": 112,
+      "name": "水面",
+      "supercategory": "none"
+    },
+    {
+      "id": 113,
+      "name": "河边最近的小船",
+      "supercategory": "none"
+    },
+    {
+      "id": 114,
+      "name": "河边最远的小船",
+      "supercategory": "none"
+    },
+    {
+      "id": 115,
+      "name": "河边稍远中间的蓝色小船",
+      "supercategory": "none"
+    },
+    {
+      "id": 116,
+      "name": "深褐色蛋糕，在白色盘子上。",
+      "supercategory": "none"
+    },
+    {
+      "id": 117,
+      "name": "滑雪板",
+      "supercategory": "none"
+    },
+    {
+      "id": 118,
+      "name": "火车",
+      "supercategory": "none"
+    },
+    {
+      "id": 119,
+      "name": "灰色粥",
+      "supercategory": "none"
+    },
+    {
+      "id": 120,
+      "name": "烤肉",
+      "supercategory": "none"
+    },
+    {
+      "id": 121,
+      "name": "烤面包",
+      "supercategory": "none"
+    },
+    {
+      "id": 122,
+      "name": "烧饼",
+      "supercategory": "none"
+    },
+    {
+      "id": 123,
+      "name": "狸花猫",
+      "supercategory": "none"
+    },
+    {
+      "id": 124,
+      "name": "玉米",
+      "supercategory": "none"
+    },
+    {
+      "id": 125,
+      "name": "玩具熊",
+      "supercategory": "none"
+    },
+    {
+      "id": 126,
+      "name": "瓶装巧克力酱。",
+      "supercategory": "none"
+    },
+    {
+      "id": 127,
+      "name": "电视机",
+      "supercategory": "none"
+    },
+    {
+      "id": 128,
+      "name": "白盘子",
+      "supercategory": "none"
+    },
+    {
+      "id": 129,
+      "name": "白绿相间的地毯。",
+      "supercategory": "none"
+    },
+    {
+      "id": 130,
+      "name": "白色小汽车",
+      "supercategory": "none"
+    },
+    {
+      "id": 131,
+      "name": "白色小狗，嘴里叼着飞盘",
+      "supercategory": "none"
+    },
+    {
+      "id": 132,
+      "name": "白色抽屉。",
+      "supercategory": "none"
+    },
+    {
+      "id": 133,
+      "name": "白色窗帘",
+      "supercategory": "none"
+    },
+    {
+      "id": 134,
+      "name": "白色长毛玩具狗",
+      "supercategory": "none"
+    },
+    {
+      "id": 135,
+      "name": "白色面糊",
+      "supercategory": "none"
+    },
+    {
+      "id": 136,
+      "name": "白色飞机",
+      "supercategory": "none"
+    },
+    {
+      "id": 137,
+      "name": "白色飞盘",
+      "supercategory": "none"
+    },
+    {
+      "id": 138,
+      "name": "皮卡车",
+      "supercategory": "none"
+    },
+    {
+      "id": 139,
+      "name": "盒装牛奶。",
+      "supercategory": "none"
+    },
+    {
+      "id": 140,
+      "name": "直升机",
+      "supercategory": "none"
+    },
+    {
+      "id": 141,
+      "name": "稍微弯腰，最左边穿黑色衣服的人",
+      "supercategory": "none"
+    },
+    {
+      "id": 142,
+      "name": "稍远，稍小一点，中间的斑马。",
+      "supercategory": "none"
+    },
+    {
+      "id": 143,
+      "name": "穿军装、坐在中间看书的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 144,
+      "name": "穿军装、拿着帽子、坐在最左边的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 145,
+      "name": "穿暗红色衣服，左边第二个人",
+      "supercategory": "none"
+    },
+    {
+      "id": 146,
+      "name": "穿灰色军装，站在右侧的女人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 147,
+      "name": "穿白色衣服、红色帽子的人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 148,
+      "name": "穿白色衣服、练武的男士",
+      "supercategory": "none"
+    },
+    {
+      "id": 149,
+      "name": "穿白色衣服最右边的女士",
+      "supercategory": "none"
+    },
+    {
+      "id": 150,
+      "name": "穿白色衣服的小男孩",
+      "supercategory": "none"
+    },
+    {
+      "id": 151,
+      "name": "穿白色衣服的运动员",
+      "supercategory": "none"
+    },
+    {
+      "id": 152,
+      "name": "穿白色衣服，在中间位置的棒球守球员",
+      "supercategory": "none"
+    },
+    {
+      "id": 153,
+      "name": "穿白色衣服，左边数第三个，打棒球的人",
+      "supercategory": "none"
+    },
+    {
+      "id": 154,
+      "name": "穿白色衣服，戴蓝色帽子的人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 155,
+      "name": "穿白色衣服，戴蓝色帽子，站在中间的人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 156,
+      "name": "穿白色衣服，拿着包的老年女士",
+      "supercategory": "none"
+    },
+    {
+      "id": 157,
+      "name": "穿白色衣服，正在打羽毛球的男子",
+      "supercategory": "none"
+    },
+    {
+      "id": 158,
+      "name": "穿白色衬衣、白胡子男士",
+      "supercategory": "none"
+    },
+    {
+      "id": 159,
+      "name": "穿白色衬衫的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 160,
+      "name": "穿白衣服的运动员",
+      "supercategory": "none"
+    },
+    {
+      "id": 161,
+      "name": "穿着灰色衣服的胖男人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 162,
+      "name": "穿红色上衣，正在踢球的男孩",
+      "supercategory": "none"
+    },
+    {
+      "id": 163,
+      "name": "穿红色衣服、戴黑色帽子的老人，正在打电话",
+      "supercategory": "none"
+    },
+    {
+      "id": 164,
+      "name": "穿红衣服的人",
+      "supercategory": "none"
+    },
+    {
+      "id": 165,
+      "name": "穿绿色衣服、戴墨镜、银白色头发的女人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 166,
+      "name": "穿黄白色、戴灰色帽子的和墨镜的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 167,
+      "name": "穿黑色正装的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 168,
+      "name": "穿黑色衣服、戴白色帽子的老年男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 169,
+      "name": "穿黑色衣服、戴黑色帽子、暗灰色裤子、掐着腰的人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 170,
+      "name": "穿黑色衣服、黄褐色领带，站在左侧的男人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 171,
+      "name": "穿黑色衣服的运动员",
+      "supercategory": "none"
+    },
+    {
+      "id": 172,
+      "name": "穿黑色衣服，坐在最右边的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 173,
+      "name": "穿黑色衣服，打电话，坐在中间的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 174,
+      "name": "穿黑色衣服，打电话，坐在最左边的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 175,
+      "name": "穿黑色衣服，背面的人",
+      "supercategory": "none"
+    },
+    {
+      "id": 176,
+      "name": "站在男士右边的女士",
+      "supercategory": "none"
+    },
+    {
+      "id": 177,
+      "name": "站立、拿着遥控器的男人。",
+      "supercategory": "none"
+    },
+    {
+      "id": 178,
+      "name": "等公交车的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 179,
+      "name": "米饭",
+      "supercategory": "none"
+    },
+    {
+      "id": 180,
+      "name": "紧靠左边第二个大象的小象",
+      "supercategory": "none"
+    },
+    {
+      "id": 181,
+      "name": "红色公交车",
+      "supercategory": "none"
+    },
+    {
+      "id": 182,
+      "name": "红色海鲜",
+      "supercategory": "none"
+    },
+    {
+      "id": 183,
+      "name": "红色滑雪板",
+      "supercategory": "none"
+    },
+    {
+      "id": 184,
+      "name": "红色车头",
+      "supercategory": "none"
+    },
+    {
+      "id": 185,
+      "name": "绿树林",
+      "supercategory": "none"
+    },
+    {
+      "id": 186,
+      "name": "绿色树林。",
+      "supercategory": "none"
+    },
+    {
+      "id": 187,
+      "name": "绿色草地",
+      "supercategory": "none"
+    },
+    {
+      "id": 188,
+      "name": "绿色草坪。",
+      "supercategory": "none"
+    },
+    {
+      "id": 189,
+      "name": "绿色蔬菜。",
+      "supercategory": "none"
+    },
+    {
+      "id": 190,
+      "name": "胡萝卜和绿豆",
+      "supercategory": "none"
+    },
+    {
+      "id": 191,
+      "name": "花狗",
+      "supercategory": "none"
+    },
+    {
+      "id": 192,
+      "name": "草地上的狗",
+      "supercategory": "none"
+    },
+    {
+      "id": 193,
+      "name": "被遮挡的男人",
+      "supercategory": "none"
+    },
+    {
+      "id": 194,
+      "name": "装了半杯葡萄酒的酒杯",
+      "supercategory": "none"
+    },
+    {
+      "id": 195,
+      "name": "装牙刷的牙刷杯，里面有三只牙刷",
+      "supercategory": "none"
+    },
+    {
+      "id": 196,
+      "name": "诺基亚标志旗",
+      "supercategory": "none"
+    },
+    {
+      "id": 197,
+      "name": "趴在地上的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 198,
+      "name": "踩滑板的人",
+      "supercategory": "none"
+    },
+    {
+      "id": 199,
+      "name": "躬着腰的男士",
+      "supercategory": "none"
+    },
+    {
+      "id": 200,
+      "name": "躺在草地上的狸花猫",
+      "supercategory": "none"
+    },
+    {
+      "id": 201,
+      "name": "这是一个白色瓷花瓶，里面装有白色花和红色的花。",
+      "supercategory": "none"
+    },
+    {
+      "id": 202,
+      "name": "这是一份粉红色饭盒装着的盒饭，里面有面包、坚果仁、切好的菠萝。",
+      "supercategory": "none"
+    },
+    {
+      "id": 203,
+      "name": "这是一份黄色饭盒装着的盒饭，里面有肉丸、西兰花。",
+      "supercategory": "none"
+    },
+    {
+      "id": 204,
+      "name": "这是一只哈士奇，在草地上和右边的黑狗玩。",
+      "supercategory": "none"
+    },
+    {
+      "id": 205,
+      "name": "这是一只橘黄色猫，站在书桌最左侧，右边有两只猫，中间一只是黑白相间的猫，右边一只是花白色猫。",
+      "supercategory": "none"
+    },
+    {
+      "id": 206,
+      "name": "这是一只橘黄色的猫，和另外四只猫并排坐在地上，位于从左边数第一的位置，从右边数第五的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 207,
+      "name": "这是一只橘黄色的猫，和另外四只猫并排坐在地上，位于从左边数第二的位置，从右边数第四的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 208,
+      "name": "这是一只橘黄色的长毛狗，两边分别有两只狗，左边是黑狗，右边是黄色的狗。",
+      "supercategory": "none"
+    },
+    {
+      "id": 209,
+      "name": "这是一只灰白色的猫，和另外四只猫并排坐在地上，位于从左边数第三的位置，从右边数第三的位置，在正中间。",
+      "supercategory": "none"
+    },
+    {
+      "id": 210,
+      "name": "这是一只灰白色的猫，和另外四只猫并排坐在地上，位于从左边数第四的位置，从右边数第二的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 211,
+      "name": "这是一只白灰色的猫，坐在桌子最右侧，左边紧靠着的是黑白色猫，最左侧是橘黄色猫。",
+      "supercategory": "none"
+    },
+    {
+      "id": 212,
+      "name": "这是一只白色的猫，和另外四只猫并排坐在地上，位于从左边数第五的位置，从右边数第一的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 213,
+      "name": "这是一只长颈鹿，正在吃树上的树叶。",
+      "supercategory": "none"
+    },
+    {
+      "id": 214,
+      "name": "这是一只黄色的狗，和两外两只狗在草地并排跑，在最右边。",
+      "supercategory": "none"
+    },
+    {
+      "id": 215,
+      "name": "这是一只黄色的狗，和另外三只狗并排坐田地，位于从左边数第三的位置，从右边数第二的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 216,
+      "name": "这是一只黄色的狗，和另外三只狗并排坐田地，位于从左边数第四的位置，从右边数第一的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 217,
+      "name": "这是一只黄色的狗，坐在地上，和另外三只狗并排坐着，位于从左边数第三的位置，从右边数第二的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 218,
+      "name": "这是一只黄色的狗，坐在地上，和另外三只狗并排坐着，位于最左边。",
+      "supercategory": "none"
+    },
+    {
+      "id": 219,
+      "name": "这是一只黄色的猫，左边有只白猫，背后是绿色植物。",
+      "supercategory": "none"
+    },
+    {
+      "id": 220,
+      "name": "这是一只黑狗，在草地里和两位两只狗并排跑，在最左边。",
+      "supercategory": "none"
+    },
+    {
+      "id": 221,
+      "name": "这是一只黑狗，张着嘴，正在和左边的哈士奇玩。",
+      "supercategory": "none"
+    },
+    {
+      "id": 222,
+      "name": "这是一只黑白色的猫，坐在桌子上，位于两只猫中间，左边是橘黄色猫，右边是白灰色的猫。",
+      "supercategory": "none"
+    },
+    {
+      "id": 223,
+      "name": "这是一只黑色的狗，和另外三只狗并排坐田地，位于从左边数第一的位置，从右边数第四的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 224,
+      "name": "这是一只黑色的狗，和另外三只狗并排坐田地，位于从左边数第二的位置，从右边数第三的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 225,
+      "name": "这是一只黑色的狗，坐在地上，和另外三只狗并排坐着，位于从左边数第二的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 226,
+      "name": "这是一只黑色的狗，坐在地上，和另外三只狗并排坐着，位于从左边数第四的位置，从右边数第一的位置。",
+      "supercategory": "none"
+    },
+    {
+      "id": 227,
+      "name": "远处守门员",
+      "supercategory": "none"
+    },
+    {
+      "id": 228,
+      "name": "远处的长颈鹿，在墙边。",
+      "supercategory": "none"
+    },
+    {
+      "id": 229,
+      "name": "远处的高塔",
+      "supercategory": "none"
+    },
+    {
+      "id": 230,
+      "name": "透明玻璃水杯",
+      "supercategory": "none"
+    },
+    {
+      "id": 231,
+      "name": "金毛狗",
+      "supercategory": "none"
+    },
+    {
+      "id": 232,
+      "name": "钢盆，盆下半部分是网状。",
+      "supercategory": "none"
+    },
+    {
+      "id": 233,
+      "name": "锅台，又叫灶台，中间放了水壶，右侧有个水龙头和蓄水池。",
+      "supercategory": "none"
+    },
+    {
+      "id": 234,
+      "name": "长颈鹿的脖子和头。",
+      "supercategory": "none"
+    },
+    {
+      "id": 235,
+      "name": "陶瓷壶。",
+      "supercategory": "none"
+    },
+    {
+      "id": 236,
+      "name": "雪地",
+      "supercategory": "none"
+    },
+    {
+      "id": 237,
+      "name": "露出半截身子的女人",
+      "supercategory": "none"
+    },
+    {
+      "id": 238,
+      "name": "马桶",
+      "supercategory": "none"
+    },
+    {
+      "id": 239,
+      "name": "高楼",
+      "supercategory": "none"
+    },
+    {
+      "id": 240,
+      "name": "鸟",
+      "supercategory": "none"
+    },
+    {
+      "id": 241,
+      "name": "黄灰色狗",
+      "supercategory": "none"
+    },
+    {
+      "id": 242,
+      "name": "黄狗",
+      "supercategory": "none"
+    },
+    {
+      "id": 243,
+      "name": "黄白相间的小花狗",
+      "supercategory": "none"
+    },
+    {
+      "id": 244,
+      "name": "黄色公交车",
+      "supercategory": "none"
+    },
+    {
+      "id": 245,
+      "name": "黄色狸花猫",
+      "supercategory": "none"
+    },
+    {
+      "id": 246,
+      "name": "黄色蜥蜴",
+      "supercategory": "none"
+    },
+    {
+      "id": 247,
+      "name": "黑色充电宝",
+      "supercategory": "none"
+    },
+    {
+      "id": 248,
+      "name": "黑色滑板",
+      "supercategory": "none"
+    },
+    {
+      "id": 249,
+      "name": "黑色狸花猫",
+      "supercategory": "none"
+    },
+    {
+      "id": 250,
+      "name": "黑色衣服的小女孩。",
+      "supercategory": "none"
+    },
+    {
+      "id": 251,
+      "name": "黑色飞机，周围有很多人",
+      "supercategory": "none"
+    }
+  ]
+}
