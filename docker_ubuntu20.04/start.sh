@@ -1,5 +1,5 @@
 # 运行 ubuntu20.04-base 镜像，挂载当前 GLIP 目录
-docker run -it  --gpus all --name ubuntu-glip  -v $(pwd):/workspace/GLIP  -w /workspace/GLIP   ubuntu20.04-base:latest
+docker run -it  --gpus all   --shm-size=16g  --name ubuntu-glip  -v $(pwd):/workspace/GLIP  -w /workspace/GLIP   ubuntu20.04-base:latest
 
 
 
