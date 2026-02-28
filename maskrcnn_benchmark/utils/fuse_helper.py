@@ -341,24 +341,39 @@ class BiAttentionBlock(nn.Module):
         l = l + self.drop_path(self.gamma_l * delta_l)
         return v, l
 
+
 class BiAttentionBlockForCheckpoint(nn.Module):
     def __init__(self, v_dim, l_dim, embed_dim, num_heads, hidden_dim=None, dropout=0.1,
                  drop_path=.0, init_values=1e-4, cfg=None):
-        """
-        Inputs:
-            embed_dim - Dimensionality of input and attention feature vectors
-            hidden_dim - Dimensionality of hidden layer in feed-forward network
-                         (usually 2-4x larger than embed_dim)
-            num_heads - Number of heads to use in the Multi-Head Attention block
-            dropout - Amount of dropout to apply in the feed-forward network
-        """
         super(BiAttentionBlockForCheckpoint, self).__init__()
 
-        # pre layer norm
+        # 保存 cfg
+        self.cfg = cfg
+
+        # 获取正确的语言维度 - 从配置中读取
+        if cfg is not None and hasattr(cfg.MODEL.LANGUAGE_BACKBONE, 'HIDDEN_SIZE'):
+            # 使用配置中指定的隐藏层大小
+            actual_l_dim = cfg.MODEL.LANGUAGE_BACKBONE.HIDDEN_SIZE
+            print(f"Using language hidden size from config: {actual_l_dim}")
+        elif cfg is not None and cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "bert-base-chinese":
+            # 自动检测 bert-base-chinese
+            actual_l_dim = 768
+            print(f"Auto-detected bert-base-chinese, setting l_dim to 768")
+        else:
+            # 默认使用传入的 l_dim
+            actual_l_dim = l_dim
+            print(f"Using provided l_dim: {actual_l_dim}")
+
+        # 如果传入的 l_dim 和实际维度不匹配，打印警告
+        if l_dim != actual_l_dim:
+            print(f"WARNING: l_dim={l_dim} != actual_l_dim={actual_l_dim}. Using actual_l_dim={actual_l_dim}")
+
+        # 使用正确的维度创建 LayerNorm
         self.layer_norm_v = nn.LayerNorm(v_dim)
-        self.layer_norm_l = nn.LayerNorm(l_dim)
+        self.layer_norm_l = nn.LayerNorm(actual_l_dim)  # 使用实际的维度
+
         self.attn = BiMultiHeadAttention(v_dim=v_dim,
-                                         l_dim=l_dim,
+                                         l_dim=actual_l_dim,  # 使用实际的维度
                                          embed_dim=embed_dim,
                                          num_heads=num_heads,
                                          dropout=dropout,
@@ -367,30 +382,52 @@ class BiAttentionBlockForCheckpoint(nn.Module):
         # add layer scale for training stability
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         self.gamma_v = nn.Parameter(init_values * torch.ones((v_dim)), requires_grad=True)
-        self.gamma_l = nn.Parameter(init_values * torch.ones((l_dim)), requires_grad=True)
+        self.gamma_l = nn.Parameter(init_values * torch.ones((actual_l_dim)), requires_grad=True)  # 使用实际的维度
 
-        self.cfg = cfg
-        if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.SEPARATE_BIDIRECTIONAL:
-            if not self.cfg.MODEL.DYHEAD.FUSE_CONFIG.DO_LANG_PROJ_OUTSIDE_CHECKPOINT:
-                self.shrink_lang = FeatureResizer(l_dim * 5, l_dim, 0.1)
+        # 条件判断
+        if hasattr(cfg.MODEL.DYHEAD.FUSE_CONFIG, 'SEPARATE_BIDIRECTIONAL'):
+            self.separate_bidirectional = cfg.MODEL.DYHEAD.FUSE_CONFIG.SEPARATE_BIDIRECTIONAL
+        else:
+            self.separate_bidirectional = False
+
+        if hasattr(cfg.MODEL.DYHEAD.FUSE_CONFIG, 'DO_LANG_PROJ_OUTSIDE_CHECKPOINT'):
+            self.do_lang_proj_outside_checkpoint = cfg.MODEL.DYHEAD.FUSE_CONFIG.DO_LANG_PROJ_OUTSIDE_CHECKPOINT
+        else:
+            self.do_lang_proj_outside_checkpoint = False
+
+        if self.separate_bidirectional and not self.do_lang_proj_outside_checkpoint:
+            self.shrink_lang = FeatureResizer(actual_l_dim * 5, actual_l_dim, 0.1)  # 使用正确的维度
 
     def forward(self, q0, q1, q2, q3, q4, l, attention_mask_l=None, dummy_tensor=None):
+        """
+        Forward pass for BiAttentionBlockForCheckpoint
+        """
+        # 确保输入不为空
+        if l is None:
+            return q0, q1, q2, q3, q4, None, None, None, None, None
 
-        if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.SEPARATE_BIDIRECTIONAL:
+        # 调试信息 - 打印维度
+        # if dummy_tensor is not None:  # 只在第一次调用时打印，避免过多输出
+        #     print(f"BiAttentionBlockForCheckpoint forward - l shape: {l.shape}")
+        #     print(f"layer_norm_l expected shape: {self.layer_norm_l.normalized_shape}")
+
+        if self.separate_bidirectional:
             visu_feat = []
             lang_feat = []
             for ii, feat in enumerate([q0, q1, q2, q3, q4]):
                 bs, _, h, w = feat.shape
                 q = feat.flatten(2).transpose(1, 2)
-                
+
                 new_v, new_l = self.single_attention_call(q, l, attention_mask_l=attention_mask_l)
                 new_v = new_v.transpose(1, 2).contiguous().view(bs, -1, h, w)
                 lang_feat.append(new_l)
                 visu_feat.append(new_v)
-            if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.DO_LANG_PROJ_OUTSIDE_CHECKPOINT:
+
+            if self.do_lang_proj_outside_checkpoint:
                 pass
             else:
-                lang_feat = self.shrink_lang(torch.cat(lang_feat, dim = -1)) # From multiple dimensions
+                if hasattr(self, 'shrink_lang'):
+                    lang_feat = self.shrink_lang(torch.cat(lang_feat, dim=-1))
                 lang_feat = [lang_feat, None, None, None, None]
         else:
             visu_feat = []
@@ -400,30 +437,54 @@ class BiAttentionBlockForCheckpoint(nn.Module):
                 size_per_level.append([h, w])
                 feat = permute_and_flatten(feat_per_level, bs, 1, c, h, w)
                 visual_features_flatten.append(feat)
-            visual_features_flatten = cat(visual_features_flatten, dim=1)
-            new_v, new_l = self.single_attention_call(visual_features_flatten, l, attention_mask_l=attention_mask_l)
-            # [bs, N, C] -> [bs, C, N]
-            new_v = new_v.transpose(1, 2).contiguous()
 
-            start = 0
-            for (h, w) in size_per_level:
-                new_v_per_level = new_v[:, :, start:start + h * w].view(bs, -1, h, w).contiguous()
-                visu_feat.append(new_v_per_level)
-                start += h * w
-            
-            lang_feat = [new_l, None, None, None, None]
+            if len(visual_features_flatten) > 0:
+                visual_features_flatten = cat(visual_features_flatten, dim=1)
+                new_v, new_l = self.single_attention_call(visual_features_flatten, l, attention_mask_l=attention_mask_l)
+                new_v = new_v.transpose(1, 2).contiguous()
 
-        return visu_feat[0], visu_feat[1], visu_feat[2], visu_feat[3], visu_feat[4], lang_feat[0], lang_feat[1], lang_feat[2], lang_feat[3], lang_feat[4]
+                start = 0
+                for (h, w) in size_per_level:
+                    new_v_per_level = new_v[:, :, start:start + h * w].view(bs, -1, h, w).contiguous()
+                    visu_feat.append(new_v_per_level)
+                    start += h * w
+            else:
+                visu_feat = [q0, q1, q2, q3, q4]
+                new_l = l
 
-    
+            lang_feat = [new_l if 'new_l' in locals() else l, None, None, None, None]
+
+        result = [
+            visu_feat[0] if len(visu_feat) > 0 else q0,
+            visu_feat[1] if len(visu_feat) > 1 else q1,
+            visu_feat[2] if len(visu_feat) > 2 else q2,
+            visu_feat[3] if len(visu_feat) > 3 else q3,
+            visu_feat[4] if len(visu_feat) > 4 else q4,
+            lang_feat[0] if lang_feat[0] is not None else l,
+            lang_feat[1],
+            lang_feat[2],
+            lang_feat[3],
+            lang_feat[4]
+        ]
+
+        return tuple(result)
+
     def single_attention_call(self, v, l, attention_mask_l=None, dummy_tensor=None):
+        """
+        Single attention call for checkpointing
+        """
         v = self.layer_norm_v(v)
-        l = self.layer_norm_l(l)
+        l = self.layer_norm_l(l)  # 现在应该使用正确的维度
         delta_v, delta_l = self.attn(v, l, attention_mask_l=attention_mask_l)
-        # v, l = v + delta_v, l + delta_l
         v = v + self.drop_path(self.gamma_v * delta_v)
         l = l + self.drop_path(self.gamma_l * delta_l)
         return v, l
+
+    def __call__(self, *args, **kwargs):
+        """
+        Make sure the module is callable
+        """
+        return self.forward(*args, **kwargs)
 
 
 # Single Direction MHA

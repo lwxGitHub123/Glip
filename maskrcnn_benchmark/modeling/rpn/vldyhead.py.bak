@@ -562,17 +562,13 @@ class VLDyHead(torch.nn.Module):
         super(VLDyHead, self).__init__()
         self.cfg = cfg
         # bert_cfg = BertConfig.from_pretrained(cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE)
-        if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE in ["bert-base-uncased", "bert-base-chinese", "roberta-base"]:
-            from transformers import BertConfig, RobertaConfig
-            if "roberta" in cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE:
-                lang_cfg = RobertaConfig.from_pretrained(cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE)
-            else:
-                lang_cfg = BertConfig.from_pretrained(cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE)
+        if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "bert-base-uncased":
+            lang_cfg = BertConfig.from_pretrained(cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE)
         elif cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "clip":
             lang_cfg = cfg
         else:
             lang_cfg = None
-            raise NotImplementedError(f"Model {cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE} not supported")
+            raise NotImplementedError
 
         num_classes = cfg.MODEL.DYHEAD.NUM_CLASSES - 1
         num_tokens = cfg.MODEL.LANGUAGE_BACKBONE.MAX_QUERY_LEN
@@ -613,7 +609,7 @@ class VLDyHead(torch.nn.Module):
                     #     clamp_min_for_underflow=cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_BERTATTN_MIN_FOR_UNDERFLOW,
                     #     clamp_max_for_overflow=cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_BERTATTN_MAX_FOR_OVERFLOW)
                     # )
-                    if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE in ["bert-base-uncased", "bert-base-chinese", "roberta-base"]:
+                    if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "bert-base-uncased":
                         dyhead_tower.append(
                             BertEncoderLayer(
                                 lang_cfg,
@@ -625,7 +621,7 @@ class VLDyHead(torch.nn.Module):
                             CLIPTransformerLayer(lang_cfg)
                         )
                     else:
-                        raise NotImplementedError(f"Model {cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE} not supported in this context")
+                        raise NotImplementedError
 
                 else:
                     dyhead_tower.append(

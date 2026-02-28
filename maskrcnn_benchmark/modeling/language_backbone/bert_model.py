@@ -14,18 +14,20 @@ class BertEncoder(nn.Module):
         self.bert_name = cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE
         print("LANGUAGE BACKBONE USE GRADIENT CHECKPOINTING: ", self.cfg.MODEL.LANGUAGE_BACKBONE.USE_CHECKPOINT)
 
-        if self.bert_name == "bert-base-uncased":
+        # 添加对 bert-base-chinese 的支持
+        if self.bert_name in ["bert-base-uncased", "bert-base-chinese"]:
             config = BertConfig.from_pretrained(self.bert_name)
             config.gradient_checkpointing = self.cfg.MODEL.LANGUAGE_BACKBONE.USE_CHECKPOINT
             self.model = BertModel.from_pretrained(self.bert_name, add_pooling_layer=False, config=config)
             self.language_dim = 768
+            print(f"✅ 成功加载模型: {self.bert_name}")
         elif self.bert_name == "roberta-base":
             config = RobertaConfig.from_pretrained(self.bert_name)
             config.gradient_checkpointing = self.cfg.MODEL.LANGUAGE_BACKBONE.USE_CHECKPOINT
             self.model = RobertaModel.from_pretrained(self.bert_name, add_pooling_layer=False, config=config)
             self.language_dim = 768
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f"模型 {self.bert_name} 未实现")
 
         self.num_layers = cfg.MODEL.LANGUAGE_BACKBONE.N_LAYERS
 

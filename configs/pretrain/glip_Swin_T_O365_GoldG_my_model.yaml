@@ -11,7 +11,8 @@ MODEL:
 
   LANGUAGE_BACKBONE:
     FREEZE: False
-    MODEL_TYPE: "bert-base-uncased" # "roberta-base", "clip"
+    MODEL_TYPE: "bert-base-chinese" # "roberta-base", "clip"
+    HIDDEN_SIZE: 768
     MASK_SPECIAL: False
 
   RPN:

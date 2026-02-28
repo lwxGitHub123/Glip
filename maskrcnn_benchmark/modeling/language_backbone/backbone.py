@@ -23,6 +23,16 @@ def build_bert_backbone(cfg):
     return model
 
 
+# 添加中文BERT支持
+@registry.LANGUAGE_BACKBONES.register("bert-base-chinese")
+def build_bert_chinese_backbone(cfg):
+    """中文BERT骨干网络"""
+    body = bert_model.BertEncoder(cfg)
+    model = nn.Sequential(OrderedDict([("body", body)]))
+    print("✅ 已加载中文BERT模型: bert-base-chinese")
+    return model
+
+
 @registry.LANGUAGE_BACKBONES.register("rnn")
 def build_rnn_backbone(cfg):
     body = rnn_model.RNNEnoder(cfg)
