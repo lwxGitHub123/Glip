@@ -12,6 +12,7 @@ MODEL:
   LANGUAGE_BACKBONE:
     FREEZE: False
     MODEL_TYPE: "bert-base-chinese" # "roberta-base", "clip"
+    TOKENIZER_TYPE: "bert-base-chinese"
     HIDDEN_SIZE: 768
     MASK_SPECIAL: False
 

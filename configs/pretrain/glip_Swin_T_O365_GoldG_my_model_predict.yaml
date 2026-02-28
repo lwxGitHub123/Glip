@@ -1,6 +1,6 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedVLRCNN"
-  WEIGHT: "output/coco_dataset0227_glip_tiny_model_o365_goldg_cc_sbu/model_0004000.pth"
+  WEIGHT: "output/glip_Swin_T_O365_GoldG_my_model_glip_tiny_model_o365_goldg_cc_sbu_chinese/model_0004000.pth"
   RPN_ONLY: True
   RPN_ARCHITECTURE: "VLDYHEAD"
 
@@ -12,6 +12,8 @@ MODEL:
   LANGUAGE_BACKBONE:
     FREEZE: False
     MODEL_TYPE: "bert-base-chinese" # "roberta-base", "clip"
+    TOKENIZER_TYPE: "bert-base-chinese"
+    HIDDEN_SIZE: 768
     MASK_SPECIAL: False
 
   RPN:

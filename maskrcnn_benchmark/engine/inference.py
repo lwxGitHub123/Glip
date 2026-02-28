@@ -260,6 +260,9 @@ def create_queries_and_maps(labels, label_list, additional_labels = None, cfg = 
     if cfg.MODEL.LANGUAGE_BACKBONE.TOKENIZER_TYPE == "bert-base-uncased":
         tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
         tokenized = tokenizer(objects_query, return_tensors="pt")
+    elif cfg.MODEL.LANGUAGE_BACKBONE.TOKENIZER_TYPE == "bert-base-chinese":
+        tokenizer = AutoTokenizer.from_pretrained("bert-base-chinese")
+        tokenized = tokenizer(objects_query, return_tensors="pt")
     elif cfg.MODEL.LANGUAGE_BACKBONE.TOKENIZER_TYPE == "clip":
         from transformers import CLIPTokenizerFast
         if cfg.MODEL.DYHEAD.FUSE_CONFIG.MLM_LOSS:
