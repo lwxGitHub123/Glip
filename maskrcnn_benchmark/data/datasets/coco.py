@@ -17,6 +17,7 @@ from maskrcnn_benchmark.structures.keypoint import PersonKeypoints
 from maskrcnn_benchmark.config import cfg
 import pdb
 
+
 def _count_visible_keypoints(anno):
     return sum(sum(1 for v in ann["keypoints"][2::3] if v > 0) for ann in anno)
 
@@ -151,7 +152,7 @@ class COCODataset(CocoDetection):
 
         if few_shot:
             ids = []
-            cats_freq = [few_shot]*len(self.coco.cats.keys())
+            cats_freq = [few_shot] * len(self.coco.cats.keys())
             if 'shuffle_seed' in kwargs and kwargs['shuffle_seed'] != 0:
                 import random
                 random.Random(kwargs['shuffle_seed']).shuffle(self.ids)
@@ -162,15 +163,15 @@ class COCODataset(CocoDetection):
                 else:
                     ann_ids = self.coco.getAnnIds(imgIds=img_id, iscrowd=None)
                 anno = self.coco.loadAnns(ann_ids)
-                cat = set([ann['category_id'] for ann in anno]) #set/tuple corresponde to instance/image level
-                is_needed = sum([cats_freq[c-1]>0 for c in cat])
+                cat = set([ann['category_id'] for ann in anno])  # set/tuple corresponde to instance/image level
+                is_needed = sum([cats_freq[c - 1] > 0 for c in cat])
                 if is_needed:
                     ids.append(img_id)
                     for c in cat:
-                        cats_freq[c-1] -= 1
+                        cats_freq[c - 1] -= 1
                     # print(cat, cats_freq)
             self.ids = ids
-        
+
         if override_category is not None:
             self.coco.dataset["categories"] = override_category
             print("Override category: ", override_category)
@@ -195,9 +196,24 @@ class COCODataset(CocoDetection):
                 label_list[self.json_category_id_to_contiguous_id[i["id"]]] = i["name"]
         return label_list
 
-    def __getitem__(self, idx):
+    def get_img_info(self, index):
+        """
+        获取图像的基本信息，用于计算 aspect ratios
+        Args:
+            index (int): 图像索引
+        Returns:
+            dict: 包含图像宽度和高度的字典
+        """
+        img_id = self.id_to_img_map[index]
+        img_data = self.coco.imgs[img_id]
+        return {
+            "width": img_data["width"],
+            "height": img_data["height"],
+            "id": img_data["id"],
+            "file_name": img_data["file_name"]
+        }
 
-        
+    def __getitem__(self, idx):
         img, anno = super(COCODataset, self).__getitem__(idx)
 
         # filter crowd annotations
@@ -250,6 +266,21 @@ class COCODataset(CocoDetection):
             keypoints = PersonKeypoints(keypoints, img.size)
             target.add_field("keypoints", keypoints)
 
+        # ========== 添加 caption 处理 ==========
+        # 从 self.coco.imgs 中获取 caption（你的 JSON 中 images 字段包含 caption）
+        img_id = self.ids[idx]
+        img_info = self.coco.imgs[img_id]
+        if "caption" in img_info:
+            caption = img_info["caption"]
+            target.add_field("caption", caption)
+        elif "cococn_tags" in img_info:
+            # 如果没有 caption 字段，但有 cococn_tags，将它们合并成 caption
+            tags = img_info.get("cococn_tags", [])
+            if tags:
+                caption = "，".join(tags)
+                target.add_field("caption", caption)
+        # ========== 结束 caption 处理 ==========
+
         target = target.clip_to_image(remove_empty=True)
 
         if self.transforms is not None:
@@ -260,9 +291,9 @@ class COCODataset(CocoDetection):
             num_sample_target = math.ceil(len(target) * ratio) if ratio > 0 else math.ceil(-ratio)
             sample_idx = torch.randperm(len(target))[:num_sample_target]
             target = target[sample_idx]
-        return img, target, idx
 
-    def get_img_info(self, index):
-        img_id = self.id_to_img_map[index]
-        img_data = self.coco.imgs[img_id]
-        return img_data
+        # 从 target 中提取 caption，确保返回值格式正确
+        caption = target.get_field("caption") if target.has_field("caption") else ""
+
+        return img, target, idx, caption, None, None
+

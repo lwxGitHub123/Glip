@@ -42,7 +42,7 @@ class BoxList(object):
     # note: _jit_wrap/_jit_unwrap only work if the keys and the sizes don't change in between
     def _jit_unwrap(self):
         return (self.bbox,) + tuple(f for f in (self.get_field(field)
-                                    for field in sorted(self.fields()))
+                                                for field in sorted(self.fields()))
                                     if isinstance(f, torch.Tensor))
 
     def _jit_wrap(self, input_stream):
@@ -122,8 +122,13 @@ class BoxList(object):
             bbox = BoxList(scaled_box, size, mode=self.mode)
             # bbox._copy_extra_fields(self)
             for k, v in self.extra_fields.items():
-                if not isinstance(v, torch.Tensor):
+                # 只对特定类型的对象调用 resize
+                from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
+                from maskrcnn_benchmark.structures.keypoint import PersonKeypoints
+
+                if isinstance(v, (SegmentationMask, PersonKeypoints)):
                     v = v.resize(size, *args, **kwargs)
+                # 对于其他类型（字符串、普通张量等），直接添加
                 bbox.add_field(k, v)
             return bbox
 
@@ -139,8 +144,13 @@ class BoxList(object):
         bbox = BoxList(scaled_box, size, mode="xyxy")
         # bbox._copy_extra_fields(self)
         for k, v in self.extra_fields.items():
-            if not isinstance(v, torch.Tensor):
+            # 只对特定类型的对象调用 resize
+            from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
+            from maskrcnn_benchmark.structures.keypoint import PersonKeypoints
+
+            if isinstance(v, (SegmentationMask, PersonKeypoints)):
                 v = v.resize(size, *args, **kwargs)
+            # 对于其他类型（字符串、普通张量等），直接添加
             bbox.add_field(k, v)
 
         return bbox.convert(self.mode)
@@ -178,8 +188,13 @@ class BoxList(object):
         bbox = BoxList(transposed_boxes, self.size, mode="xyxy")
         # bbox._copy_extra_fields(self)
         for k, v in self.extra_fields.items():
-            if not isinstance(v, torch.Tensor):
+            # 只对特定类型的对象调用 transpose
+            from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
+            from maskrcnn_benchmark.structures.keypoint import PersonKeypoints
+
+            if isinstance(v, (SegmentationMask, PersonKeypoints)):
                 v = v.transpose(method)
+            # 对于其他类型（字符串、普通张量等），直接添加
             bbox.add_field(k, v)
         return bbox.convert(self.mode)
 
@@ -203,8 +218,13 @@ class BoxList(object):
         bbox = BoxList(cropped_box, (w, h), mode="xyxy")
         # bbox._copy_extra_fields(self)
         for k, v in self.extra_fields.items():
-            if not isinstance(v, torch.Tensor):
+            # 只对特定类型的对象调用 crop
+            from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
+            from maskrcnn_benchmark.structures.keypoint import PersonKeypoints
+
+            if isinstance(v, (SegmentationMask, PersonKeypoints)):
                 v = v.crop(box)
+            # 对于其他类型（字符串、普通张量等），直接添加
             bbox.add_field(k, v)
         return bbox.convert(self.mode)
 
@@ -219,6 +239,41 @@ class BoxList(object):
         return bbox
 
     def __getitem__(self, item):
+        # 处理布尔张量索引
+        if isinstance(item, torch.Tensor) and item.dtype == torch.bool:
+            # 获取选中元素的索引
+            indices = torch.nonzero(item).squeeze(1)
+            if indices.numel() == 0:
+                # 如果没有选中的元素，返回空的 BoxList
+                return BoxList(torch.zeros((0, 4), device=self.bbox.device), self.size, self.mode)
+            # 确保 indices 是一维的
+            if indices.dim() > 1:
+                indices = indices.view(-1)
+            # 直接使用整数索引创建新的 BoxList
+            bbox = BoxList(self.bbox[indices], self.size, self.mode)
+            for k, v in self.extra_fields.items():
+                if isinstance(v, torch.Tensor):
+                    bbox.add_field(k, v[indices])
+                else:
+                    bbox.add_field(k, v)
+            return bbox
+
+        # 处理空索引
+        if isinstance(item, torch.Tensor) and item.numel() == 0:
+            return BoxList(torch.zeros((0, 4), device=self.bbox.device), self.size, self.mode)
+
+        # 处理整数索引
+        if isinstance(item, (int, torch.Tensor)) and (isinstance(item, int) or item.numel() == 1):
+            idx = item.item() if isinstance(item, torch.Tensor) else item
+            bbox = BoxList(self.bbox[idx].view(-1, 4), self.size, self.mode)
+            for k, v in self.extra_fields.items():
+                if isinstance(v, torch.Tensor):
+                    bbox.add_field(k, v[idx].unsqueeze(0))
+                else:
+                    bbox.add_field(k, v)
+            return bbox
+
+        # 处理其他类型的索引（切片、列表等）
         bbox = BoxList(self.bbox[item], self.size, self.mode)
         for k, v in self.extra_fields.items():
             bbox.add_field(k, v[item])
@@ -237,6 +292,21 @@ class BoxList(object):
         if remove_empty:
             box = self.bbox
             keep = (box[:, 3] > box[:, 1]) & (box[:, 2] > box[:, 0])
+            # 直接在这里处理，避免递归
+            if keep.dim() == 1 and keep.dtype == torch.bool:
+                indices = torch.nonzero(keep).squeeze(1)
+                if indices.numel() == 0:
+                    return BoxList(torch.zeros((0, 4), device=self.bbox.device), self.size, self.mode)
+                # 确保 indices 是一维的
+                if indices.dim() > 1:
+                    indices = indices.view(-1)
+                result = BoxList(self.bbox[indices], self.size, self.mode)
+                for k, v in self.extra_fields.items():
+                    if isinstance(v, torch.Tensor):
+                        result.add_field(k, v[indices])
+                    else:
+                        result.add_field(k, v)
+                return result
             return self[keep]
         return self
 
@@ -250,7 +320,7 @@ class BoxList(object):
             area = box[:, 2] * box[:, 3]
         else:
             raise RuntimeError("Should not be here")
-            
+
         return area
 
     def copy_with_fields(self, fields):
@@ -268,20 +338,21 @@ class BoxList(object):
         s += "image_height={}, ".format(self.size[1])
         s += "mode={})".format(self.mode)
         return s
-    
+
     @staticmethod
     def concate_box_list(list_of_boxes):
-        boxes = torch.cat([i.bbox for i in list_of_boxes], dim = 0)
+        boxes = torch.cat([i.bbox for i in list_of_boxes], dim=0)
         extra_fields_keys = list(list_of_boxes[0].extra_fields.keys())
         extra_fields = {}
         for key in extra_fields_keys:
-            extra_fields[key] = torch.cat([i.extra_fields[key] for i in list_of_boxes], dim = 0)
+            extra_fields[key] = torch.cat([i.extra_fields[key] for i in list_of_boxes], dim=0)
 
         final = list_of_boxes[0].copy_with_fields(extra_fields_keys)
 
         final.bbox = boxes
         final.extra_fields = extra_fields
         return final
+
 
 @torch.jit.unused
 def _onnx_clip_boxes_to_image(boxes, size):

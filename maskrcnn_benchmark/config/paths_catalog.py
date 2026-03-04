@@ -182,6 +182,14 @@ class DatasetCatalog(object):
             "ann_file": "coco_dataset0227/annotations/instances_val.json"
         },
 
+        "coco_cn_train": {
+            "img_dir": "COCO-CN_dataset/train2014",
+            "ann_file": "COCO-CN_dataset/annotations/coco_cn_train.json"
+        },
+        "coco_cn_val": {
+            "img_dir": "COCO-CN_dataset/val2014",
+            "ann_file": "COCO-CN_dataset/annotations/coco_cn_val.json"
+        },
 
         # coco json
         "coco_grounding_train": {

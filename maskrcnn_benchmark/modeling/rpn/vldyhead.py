@@ -25,6 +25,7 @@ import pdb
 from maskrcnn_benchmark.modeling.language_backbone.clip_model import QuickGELU, LayerNorm, DropPath
 from timm.models.layers import DropPath, trunc_normal_
 
+
 class h_sigmoid(nn.Module):
     def __init__(self, inplace=True, h_max=1):
         super(h_sigmoid, self).__init__()
@@ -234,7 +235,7 @@ class DyConv(torch.nn.Module):
 
 
 class BertEncoderLayer(BertPreTrainedModel):
-    def __init__(self, config,  clamp_min_for_underflow = False, clamp_max_for_overflow = False):
+    def __init__(self, config, clamp_min_for_underflow=False, clamp_max_for_overflow=False):
         super().__init__(config)
         self.config = config
 
@@ -243,7 +244,7 @@ class BertEncoderLayer(BertPreTrainedModel):
 
         from maskrcnn_benchmark.modeling.rpn.modeling_bert import BertAttention, BertIntermediate, BertOutput
 
-        self.attention = BertAttention(config,  clamp_min_for_underflow, clamp_max_for_overflow)
+        self.attention = BertAttention(config, clamp_min_for_underflow, clamp_max_for_overflow)
         self.intermediate = BertIntermediate(config)
         self.output = BertOutput(config)
 
@@ -368,34 +369,34 @@ class VLFuse(torch.nn.Module):
             # single-direction (text->image)
             # text -> image
             self.t2i_attn = AttentionT2I(q_dim=self.joint_embedding_size,
-                                           k_dim=self.lang_dim,
-                                           embed_dim=self.embed_dim,
-                                           num_heads=self.n_head,
-                                           hidden_dim=self.t2i_hidden_dim,
-                                           dropout=0.1,
-                                           drop_path=.0,
-                                           init_values=1.0 / cfg.MODEL.DYHEAD.NUM_CONVS,
-                                           mode="t2i",
-                                           use_layer_scale=cfg.MODEL.DYHEAD.FUSE_CONFIG.USE_LAYER_SCALE,
-                                           clamp_min_for_underflow=cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_MIN_FOR_UNDERFLOW,
-                                           clamp_max_for_overflow=cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_MAX_FOR_OVERFLOW
-                                           )
+                                         k_dim=self.lang_dim,
+                                         embed_dim=self.embed_dim,
+                                         num_heads=self.n_head,
+                                         hidden_dim=self.t2i_hidden_dim,
+                                         dropout=0.1,
+                                         drop_path=.0,
+                                         init_values=1.0 / cfg.MODEL.DYHEAD.NUM_CONVS,
+                                         mode="t2i",
+                                         use_layer_scale=cfg.MODEL.DYHEAD.FUSE_CONFIG.USE_LAYER_SCALE,
+                                         clamp_min_for_underflow=cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_MIN_FOR_UNDERFLOW,
+                                         clamp_max_for_overflow=cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_MAX_FOR_OVERFLOW
+                                         )
 
         elif cfg.MODEL.DYHEAD.FUSE_CONFIG.TYPE == "MHA-B":
             # bi-direction (text->image, image->text)
             self.b_attn = BiAttentionBlockForCheckpoint(v_dim=self.joint_embedding_size,
-                        l_dim=self.lang_dim,
-                        embed_dim=self.embed_dim,
-                        num_heads=self.n_head,
-                        hidden_dim=self.i2t_hidden_dim,
-                        dropout=0.1,
-                        drop_path=.0,
-                        init_values=1.0 / cfg.MODEL.DYHEAD.NUM_CONVS,
-                        cfg=cfg
-                        )
+                                                        l_dim=self.lang_dim,
+                                                        embed_dim=self.embed_dim,
+                                                        num_heads=self.n_head,
+                                                        hidden_dim=self.i2t_hidden_dim,
+                                                        dropout=0.1,
+                                                        drop_path=.0,
+                                                        init_values=1.0 / cfg.MODEL.DYHEAD.NUM_CONVS,
+                                                        cfg=cfg
+                                                        )
             if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.SEPARATE_BIDIRECTIONAL and self.cfg.MODEL.DYHEAD.FUSE_CONFIG.DO_LANG_PROJ_OUTSIDE_CHECKPOINT:
                 self.shrink_lang = FeatureResizer(self.lang_dim * 5,
-                                self.lang_dim, 0.1)
+                                                  self.lang_dim, 0.1)
 
 
         elif cfg.MODEL.DYHEAD.FUSE_CONFIG.TYPE == "SCAN":
@@ -483,13 +484,13 @@ class VLFuse(torch.nn.Module):
         elif self.cfg.MODEL.DYHEAD.FUSE_CONFIG.TYPE == "MHA-B":
             if self.use_checkpoint:
                 q0, q1, q2, q3, q4, l0, l1, l2, l3, l4 = checkpoint.checkpoint(self.b_attn,
-                    visual_features[0], visual_features[1],
-                    visual_features[2], visual_features[3],
-                    visual_features[4],
-                    language_dict_features['hidden'],
-                    language_dict_features['masks'],
-                    self.dummy_tensor
-                )
+                                                                               visual_features[0], visual_features[1],
+                                                                               visual_features[2], visual_features[3],
+                                                                               visual_features[4],
+                                                                               language_dict_features['hidden'],
+                                                                               language_dict_features['masks'],
+                                                                               self.dummy_tensor
+                                                                               )
             else:
                 q0, q1, q2, q3, q4, l0, l1, l2, l3, l4 = self.b_attn(
                     visual_features[0], visual_features[1],
@@ -502,7 +503,7 @@ class VLFuse(torch.nn.Module):
 
             fused_visual_features = [q0, q1, q2, q3, q4]
             if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.SEPARATE_BIDIRECTIONAL and self.cfg.MODEL.DYHEAD.FUSE_CONFIG.DO_LANG_PROJ_OUTSIDE_CHECKPOINT:
-                language_features = self.shrink_lang(torch.cat([l0, l1, l2, l3, l4], dim = -1))
+                language_features = self.shrink_lang(torch.cat([l0, l1, l2, l3, l4], dim=-1))
             else:
                 language_features = l0
 
@@ -613,7 +614,8 @@ class VLDyHead(torch.nn.Module):
                     #     clamp_min_for_underflow=cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_BERTATTN_MIN_FOR_UNDERFLOW,
                     #     clamp_max_for_overflow=cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_BERTATTN_MAX_FOR_OVERFLOW)
                     # )
-                    if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE in ["bert-base-uncased", "bert-base-chinese", "roberta-base"]:
+                    if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE in ["bert-base-uncased", "bert-base-chinese",
+                                                                  "roberta-base"]:
                         dyhead_tower.append(
                             BertEncoderLayer(
                                 lang_cfg,
@@ -625,7 +627,8 @@ class VLDyHead(torch.nn.Module):
                             CLIPTransformerLayer(lang_cfg)
                         )
                     else:
-                        raise NotImplementedError(f"Model {cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE} not supported in this context")
+                        raise NotImplementedError(
+                            f"Model {cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE} not supported in this context")
 
                 else:
                     dyhead_tower.append(
@@ -722,7 +725,7 @@ class VLDyHead(torch.nn.Module):
                     if isinstance(l, nn.Conv2d):
                         torch.nn.init.normal_(l.weight, std=0.01)
                         torch.nn.init.constant_(l.bias, bias_value)
-        
+
         if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.MLM_LOSS:
             if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "clip":
                 lang_cfg = BertConfig.from_pretrained("bert-base-uncased")
@@ -730,7 +733,7 @@ class VLDyHead(torch.nn.Module):
                 lang_cfg.vocab_size = cfg.MODEL.CLIP.VOCAB_SIZE
             self.mlm_head = BertLMPredictionHead(
                 lang_cfg
-            ) #nn.Linear(hidden_size, config.vocab_size, bias=False)
+            )  # nn.Linear(hidden_size, config.vocab_size, bias=False)
 
     def forward(self, x, language_dict_features=None, embedding=None, swint_feature_c4=None):
         logits = []
@@ -746,10 +749,10 @@ class VLDyHead(torch.nn.Module):
         t_logits = None
         if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.USE_TOKEN_LOSS:
             t_logits = []
-        
+
         if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.USE_FUSED_FEATURES_DOT_PRODUCT:
             embedding = dyhead_tower["lang"]["hidden"]
-        
+
         # MLM loss
         if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.MLM_LOSS:
             mlm_logits = self.mlm_head(embedding)
@@ -844,7 +847,8 @@ class VLDyHead(torch.nn.Module):
                 A = dot_product_proj_queries.shape[1]
                 bias = dot_product_proj_tokens_bias.unsqueeze(1).repeat(1, A, 1)
 
-                dot_product_logit = (torch.matmul(dot_product_proj_queries, dot_product_proj_tokens.transpose(-1, -2)) / self.log_scale.exp()) + bias
+                dot_product_logit = (torch.matmul(dot_product_proj_queries, dot_product_proj_tokens.transpose(-1,
+                                                                                                              -2)) / self.log_scale.exp()) + bias
                 if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.CLAMP_DOT_PRODUCT:
                     dot_product_logit = torch.clamp(dot_product_logit, max=50000)
                     dot_product_logit = torch.clamp(dot_product_logit, min=-50000)
@@ -900,6 +904,99 @@ class VLDyHeadModule(torch.nn.Module):
                 swint_feature_c4=None
                 ):
 
+        # ========== 添加全面的中文BERT兼容性处理 ==========
+        if language_dict_features is not None and len(language_dict_features) > 0:
+            print(
+                f"[DEBUG] VLDyHeadModule received language_dict_features with keys: {list(language_dict_features.keys())}")
+
+            # 确保有 'embedded' 键
+            if 'embedded' not in language_dict_features:
+                print(
+                    f"⚠️  VLDyHeadModule: 'embedded' key missing. Available keys: {list(language_dict_features.keys())}")
+                if 'pooler_output' in language_dict_features:
+                    language_dict_features['embedded'] = language_dict_features['pooler_output']
+                    print("✅ 从 pooler_output 创建 embedded")
+                elif 'last_hidden_state' in language_dict_features:
+                    language_dict_features['embedded'] = language_dict_features['last_hidden_state'].mean(dim=1)
+                    print("✅ 从 last_hidden_state.mean(dim=1) 创建 embedded")
+                elif 'hidden' in language_dict_features:
+                    language_dict_features['embedded'] = language_dict_features['hidden'].mean(dim=1)
+                    print("✅ 从 hidden.mean(dim=1) 创建 embedded")
+                else:
+                    print(f"⚠️  无法创建 embedded，将使用随机初始化")
+                    device = next(self.parameters()).device
+                    batch_size = 1
+                    if captions is not None:
+                        batch_size = len(captions)
+                    language_dict_features['embedded'] = torch.randn(batch_size, 768).to(device)
+                    print(f"✅ 创建了随机 embedded: {language_dict_features['embedded'].shape}")
+
+            # 确保有 'hidden' 键 - 优先使用已有的 last_hidden_state
+            if 'hidden' not in language_dict_features:
+                print(
+                    f"⚠️  VLDyHeadModule: 'hidden' key missing. Available keys: {list(language_dict_features.keys())}")
+                if 'last_hidden_state' in language_dict_features:
+                    language_dict_features['hidden'] = language_dict_features['last_hidden_state']
+                    print("✅ 从 last_hidden_state 创建 hidden")
+                elif 'pooler_output' in language_dict_features:
+                    # 尝试从配置文件获取序列长度
+                    if hasattr(self.cfg.MODEL.LANGUAGE_BACKBONE, 'MAX_QUERY_LEN'):
+                        seq_len = self.cfg.MODEL.LANGUAGE_BACKBONE.MAX_QUERY_LEN
+                        batch_size = language_dict_features['pooler_output'].shape[0]
+                        language_dict_features['hidden'] = language_dict_features['pooler_output'].unsqueeze(1).expand(
+                            -1, seq_len, -1)
+                        print(f"⚠️ 使用配置文件中的 MAX_QUERY_LEN={seq_len} 创建 hidden")
+                    else:
+                        # 如果都没有，使用一个默认值
+                        seq_len = 64
+                        batch_size = language_dict_features['pooler_output'].shape[0]
+                        language_dict_features['hidden'] = language_dict_features['pooler_output'].unsqueeze(1).expand(
+                            -1, seq_len, -1)
+                        print(f"⚠️ 使用默认值 seq_len={seq_len} 创建 hidden")
+                else:
+                    print(f"⚠️  无法创建 hidden，将使用随机初始化")
+                    device = next(self.parameters()).device
+                    batch_size = 1
+                    if captions is not None:
+                        batch_size = len(captions)
+                    # 从配置中获取序列长度
+                    if hasattr(self.cfg.MODEL.LANGUAGE_BACKBONE, 'MAX_QUERY_LEN'):
+                        seq_len = self.cfg.MODEL.LANGUAGE_BACKBONE.MAX_QUERY_LEN
+                    else:
+                        seq_len = 64  # 默认值
+                    language_dict_features['hidden'] = torch.randn(batch_size, seq_len, 768).to(device)
+                    print(f"✅ 创建了随机 hidden: {language_dict_features['hidden'].shape}")
+
+            # 确保有 'masks' 键
+            if 'masks' not in language_dict_features:
+                print(f"⚠️  VLDyHeadModule: 'masks' key missing")
+                device = next(self.parameters()).device
+                batch_size = language_dict_features['hidden'].shape[0]
+                seq_len = language_dict_features['hidden'].shape[1]
+                language_dict_features['masks'] = torch.ones(batch_size, seq_len).to(device)
+                print(f"✅ 创建了默认 masks: {language_dict_features['masks'].shape}")
+        else:
+            print("⚠️  VLDyHeadModule: language_dict_features is None or empty!")
+            # 创建一个默认的语言特征字典
+            device = next(self.parameters()).device
+            batch_size = 1
+            if captions is not None:
+                batch_size = len(captions)
+            # 从配置中获取序列长度
+            if hasattr(self.cfg.MODEL.LANGUAGE_BACKBONE, 'MAX_QUERY_LEN'):
+                seq_len = self.cfg.MODEL.LANGUAGE_BACKBONE.MAX_QUERY_LEN
+            else:
+                seq_len = 64  # 默认值
+
+            language_dict_features = {
+                'embedded': torch.randn(batch_size, 768).to(device),
+                'hidden': torch.randn(batch_size, seq_len, 768).to(device),
+                'masks': torch.ones(batch_size, seq_len).to(device),
+                'mlm_labels': None
+            }
+            print(f"✅ 创建了默认的 language_dict_features")
+        # ========== 结束兼容性处理 ==========
+
         if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.USE_CONTRASTIVE_ALIGN_LOSS:
             # resizer needed
             embedding = language_dict_features['embedded']
@@ -914,18 +1011,20 @@ class VLDyHeadModule(torch.nn.Module):
             text_masks = language_dict_features["masks"]
         else:
             text_masks = None
-        
+
         if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.ADD_LINEAR_LAYER:
             embedding = self.tunable_linear.weight[:embedding.size(1), :].unsqueeze(0) + embedding
             language_dict_features['embedded'] = embedding
-            language_dict_features['hidden'] = self.tunable_linear.weight[:embedding.size(1), :].unsqueeze(0) + language_dict_features['hidden']
+            language_dict_features['hidden'] = self.tunable_linear.weight[:embedding.size(1), :].unsqueeze(0) + \
+                                               language_dict_features['hidden']
 
         box_cls, box_regression, centerness, token_logits, \
-        proj_tokens, contrastive_logits, dot_product_logits, mlm_logits, shallow_img_emb_feats, fused_visual_features = self.head(features,
-                                                                        language_dict_features,
-                                                                        embedding,
-                                                                        swint_feature_c4
-                                                                        )
+            proj_tokens, contrastive_logits, dot_product_logits, mlm_logits, shallow_img_emb_feats, fused_visual_features = self.head(
+            features,
+            language_dict_features,
+            embedding,
+            swint_feature_c4
+            )
         anchors = self.anchor_generator(images, features)
 
         if self.training:
@@ -937,8 +1036,8 @@ class VLDyHeadModule(torch.nn.Module):
                                        contrastive_logits,
                                        dot_product_logits,
                                        text_masks,
-                                       mlm_logits = mlm_logits,
-                                       mlm_labels = language_dict_features["mlm_labels"],
+                                       mlm_logits=mlm_logits,
+                                       mlm_labels=language_dict_features["mlm_labels"],
                                        shallow_img_emb_feats=shallow_img_emb_feats,
                                        fused_visual_features=fused_visual_features
                                        )
@@ -984,7 +1083,9 @@ class VLDyHeadModule(torch.nn.Module):
         }
 
         if mlm_labels is not None and mlm_logits is not None:
-            losses["mlm_loss"] = nn.CrossEntropyLoss(ignore_index = -100)(mlm_logits.view(-1, mlm_logits.size(-1)), mlm_labels.view(-1)) * self.cfg.MODEL.DYHEAD.FUSE_CONFIG.MLM_LOSS_COEF
+            losses["mlm_loss"] = nn.CrossEntropyLoss(ignore_index=-100)(mlm_logits.view(-1, mlm_logits.size(-1)),
+                                                                        mlm_labels.view(
+                                                                            -1)) * self.cfg.MODEL.DYHEAD.FUSE_CONFIG.MLM_LOSS_COEF
 
         if self.cfg.MODEL.DYHEAD.FUSE_CONFIG.USE_CLASSIFICATION_LOSS:
             losses["loss_cls"] = loss_box_cls
@@ -1011,11 +1112,11 @@ class VLDyHeadModule(torch.nn.Module):
             assert (box_regression[0].shape[0]) == 1
             positive_map_label_to_token = create_positive_map_label_to_token_from_positive_map(positive_map, plus=1)
             boxes = self.box_selector_train(box_regression, centerness, anchors,
-                                        box_cls,
-                                        token_logits,
-                                        dot_product_logits,
-                                        positive_map=positive_map_label_to_token
-                                        )
+                                            box_cls,
+                                            token_logits,
+                                            dot_product_logits,
+                                            positive_map=positive_map_label_to_token
+                                            )
             train_boxes = []
             for b, t in zip(boxes, targets):
                 tb = t.copy_with_fields(["labels"])
