@@ -53,7 +53,7 @@ def boxlist_ml_nms(boxlist, nms_thresh, max_proposals=-1,
     scores = boxlist.get_field(score_field)
     labels = boxlist.get_field(label_field)
 
-    if boxes.device==torch.device("cpu"):
+    if boxes.device == torch.device("cpu"):
         keep = []
         unique_labels = torch.unique(labels)
         print(unique_labels)
@@ -67,7 +67,7 @@ def boxlist_ml_nms(boxlist, nms_thresh, max_proposals=-1,
             keep += keep_j
     else:
         keep = _box_ml_nms(boxes, scores, labels.float(), nms_thresh)
-        
+
     if max_proposals > 0:
         keep = keep[: max_proposals]
     boxlist = boxlist[keep]
@@ -110,7 +110,7 @@ def boxlist_iou(boxlist1, boxlist2):
     """
     if boxlist1.size != boxlist2.size:
         raise RuntimeError(
-                "boxlists should have same image size, got {}, {}".format(boxlist1, boxlist2))
+            "boxlists should have same image size, got {}, {}".format(boxlist1, boxlist2))
 
     N = len(boxlist1)
     M = len(boxlist2)
@@ -145,6 +145,7 @@ def _cat(tensors, dim=0):
     else:
         return cat_boxlist(tensors)
 
+
 def cat_boxlist(bboxes):
     """
     Concatenates a list of BoxList (having the same image size) into a
@@ -162,23 +163,63 @@ def cat_boxlist(bboxes):
     mode = bboxes[0].mode
     assert all(bbox.mode == mode for bbox in bboxes)
 
-    fields = set(bboxes[0].fields())
-    assert all(set(bbox.fields()) == fields for bbox in bboxes)
+    # 收集所有字段
+    all_fields = set()
+    for bbox in bboxes:
+        all_fields.update(bbox.fields())
 
     cat_boxes = BoxList(_cat([bbox.bbox for bbox in bboxes], dim=0), size, mode)
 
-    for field in fields:
-        data = _cat([bbox.get_field(field) for bbox in bboxes], dim=0)
-        cat_boxes.add_field(field, data)
+    # 对于每个字段，检查是否有bbox缺少该字段
+    for field in all_fields:
+        field_data = []
+        for bbox in bboxes:
+            if bbox.has_field(field):
+                field_data.append(bbox.get_field(field))
+            else:
+                # 如果缺少字段，创建一个默认值
+                # 尝试从其他bbox获取示例数据来确定类型
+                example_value = None
+                for b in bboxes:
+                    if b.has_field(field):
+                        example_value = b.get_field(field)
+                        break
+
+                if example_value is not None:
+                    if isinstance(example_value, torch.Tensor):
+                        # 创建与example_value相同类型的空张量
+                        device = example_value.device
+                        dtype = example_value.dtype
+                        shape = (len(bbox),) + example_value.shape[1:]
+                        default_value = torch.zeros(shape, dtype=dtype, device=device)
+                        field_data.append(default_value)
+                    elif isinstance(example_value, (int, float)):
+                        # 对于标量，创建适当类型的张量
+                        dtype = torch.int64 if isinstance(example_value, int) else torch.float32
+                        device = next(bbox.parameters(), torch.device('cpu')).device
+                        default_value = torch.zeros(len(bbox), dtype=dtype, device=device)
+                        field_data.append(default_value)
+                    else:
+                        # 对于其他类型，跳过
+                        continue
+                else:
+                    continue
+
+        if field_data:
+            try:
+                cat_boxes.add_field(field, _cat(field_data, dim=0))
+            except Exception as e:
+                print(f"Warning: cannot concatenate field {field}, error: {e}")
+                continue
 
     return cat_boxes
 
 
-def getUnionBBox(aBB, bBB, margin = 10):
-    assert aBB.size==bBB.size
-    assert aBB.mode==bBB.mode
+def getUnionBBox(aBB, bBB, margin=10):
+    assert aBB.size == bBB.size
+    assert aBB.mode == bBB.mode
     ih, iw = aBB.size
-    union_boxes = torch.cat([(torch.min(aBB.bbox[:,[0,1]], bBB.bbox[:,[0,1]]) - margin).clamp(min=0), \
-        (torch.max(aBB.bbox[:,[2]], bBB.bbox[:,[2]]) + margin).clamp(max=iw), \
-        (torch.max(aBB.bbox[:,[3]], bBB.bbox[:,[3]]) + margin).clamp(max=ih)], dim=1)
+    union_boxes = torch.cat([(torch.min(aBB.bbox[:, [0, 1]], bBB.bbox[:, [0, 1]]) - margin).clamp(min=0), \
+                             (torch.max(aBB.bbox[:, [2]], bBB.bbox[:, [2]]) + margin).clamp(max=iw), \
+                             (torch.max(aBB.bbox[:, [3]], bBB.bbox[:, [3]]) + margin).clamp(max=ih)], dim=1)
     return BoxList(union_boxes, aBB.size, mode=aBB.mode)
